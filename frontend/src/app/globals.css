@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* 
+Системийн хар горим (dark mode)-оос хамаарч өнгө өөрчлөгдөхөөс сэргийлж 
+үндсэн цагаан горимыг тогтмол болгож байна.
+*/
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background-color: #f9fafb; /* bg-gray-50-тэй ижил өнгө */
+  color: #111827; /* text-gray-900-тэй ижил өнгө */
+  font-family: Arial, Helvetica, sans-serif;
+}
