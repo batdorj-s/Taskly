@@ -13,11 +13,6 @@ import models
 import database
 from database import engine, get_db
 
-
-
-# Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
-# models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Todo API for Interview")
 
 # --- CORS SETTINGS (Frontend-ээс хандах зөвшөөрөл) ---
