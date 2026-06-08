@@ -19,6 +19,15 @@ from database import engine, get_db
 
 app = FastAPI(title="Todo API for Interview")
 
+# --- CORS SETTINGS (Frontend-ээс хандах зөвшөөрөл) ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # --- AUTHENTICATION SETUP (Нууцлалын тохиргоо) ---
 
 # Нууц үгийг hash-лах (bcrypt) тохиргоо
