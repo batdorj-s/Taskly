@@ -1,7 +1,7 @@
 # main.py - API-ийн үндсэн логик, Auth болон Endpoints
 
 import os
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -10,13 +10,17 @@ from typing import List
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from . import models, database
-from .database import engine, get_db
+import models, database
+from database import engine, get_db
 
 # Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Taskly API")
+
+@app.get("/debug-path")
+async def debug_path(request: Request):
+    return {"path": request.url.path}
 
 # --- CORS SETTINGS (Frontend-ээс хандах зөвшөөрөл) ---
 # Таны Frontend байрлаж буй хаяг
