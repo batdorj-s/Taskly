@@ -1,5 +1,9 @@
 # main.py - API-ийн үндсэн логик, Auth болон Endpoints
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -7,8 +11,11 @@ from datetime import datetime, timedelta
 from typing import List
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from . import models, database
-from .database import engine, get_db
+
+import models
+import database
+from database import engine, get_db
+
 
 
 # Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
