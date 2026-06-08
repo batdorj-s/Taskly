@@ -10,7 +10,8 @@ from typing import List
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-import models, database
+import models
+import database
 from database import engine, get_db
 
 # Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
