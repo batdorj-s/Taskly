@@ -15,7 +15,7 @@ from database import engine, get_db
 
 
 # Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Todo API for Interview")
 
