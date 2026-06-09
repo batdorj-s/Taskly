@@ -66,6 +66,16 @@ export default function AdminDashboard() {
         }
     };
 
+    const deleteUser = async (id: number) => {
+        if (!confirm('Энэ хэрэглэгчийг устгахдаа итгэлтэй байна уу?')) return;
+        try {
+            await api.delete(`/admin/users/${id}`);
+            fetchData();
+        } catch (err) {
+            alert('Устгахад алдаа гарлаа');
+        }
+    };
+
     const deleteCategory = async (id: number) => {
         try {
             await api.delete(`/admin/categories/${id}`);
@@ -103,8 +113,9 @@ export default function AdminDashboard() {
                     <h2 className="text-xl font-bold mb-4">Бүртгэлтэй хэрэглэгчид</h2>
                     <ul className="space-y-2">
                         {users.map((u: any) => (
-                            <li key={u.id} className="p-3 bg-gray-50 rounded-lg font-medium border border-gray-100 flex justify-between">
+                            <li key={u.id} className="p-3 bg-gray-50 rounded-lg font-medium border border-gray-100 flex justify-between items-center">
                                 {u.email}
+                                <button onClick={() => deleteUser(u.id)} className="text-red-500 hover:text-red-700 font-bold ml-4">Устгах</button>
                             </li>
                         ))}
                     </ul>

@@ -190,13 +190,13 @@ def delete_priority(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"msg": "Түвшин устгагдлаа"}
 
-@app.delete("/admin/statuses/{id}")
-def delete_status(id: int, db: Session = Depends(get_db)):
-    db_stat = db.query(models.Status).filter(models.Status.id == id).first()
-    if not db_stat: raise HTTPException(status_code=404, detail="Олдсонгүй")
-    db.delete(db_stat)
+@app.delete("/admin/users/{id}")
+def delete_user(id: int, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == id).first()
+    if not db_user: raise HTTPException(status_code=404, detail="Хэрэглэгч олдсонгүй")
+    db.delete(db_user)
     db.commit()
-    return {"msg": "Төлөв устгагдлаа"}
+    return {"msg": "Хэрэглэгч устгагдлаа"}
 
 # Шинэ ажил үүсгэх
 @app.post("/tasks/", response_model=models.TaskResponse)
