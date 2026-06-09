@@ -163,7 +163,12 @@ export default function TodoPage() {
                 {todos.map((todo) => (
                     <div key={todo.id} className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-xl font-black">{todo.title}</h3>
+                            <div>
+                                <span className="inline-block mb-1 text-xs font-black text-orange-600 bg-orange-50 px-3 py-1 rounded-full uppercase tracking-wider">
+                                    {todo.priority || 'Normal'}
+                                </span>
+                                <h3 className="text-xl font-black">{todo.title}</h3>
+                            </div>
                             <div className="flex gap-2">
                                 <button onClick={() => openModal(todo)} className="text-gray-400 hover:text-blue-600 p-2" title="Засах"><Edit2 size={18} /></button>
                                 <button onClick={() => deleteTodo(todo.id)} className="text-gray-400 hover:text-red-600 p-2" title="Устгах"><Trash2 size={18} /></button>
@@ -181,6 +186,7 @@ export default function TodoPage() {
                             )}
                         </div>
                     </div>
+
                 ))}
             </div>
 
