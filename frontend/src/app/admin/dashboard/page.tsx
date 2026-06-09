@@ -6,6 +6,7 @@ import api from '@/lib/api';
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
     const [newCategory, setNewCategory] = useState('');
+    const [newPriority, setNewPriority] = useState('');
 
     useEffect(() => {
         fetchData();
@@ -22,12 +23,21 @@ export default function AdminDashboard() {
 
     const addCategory = async () => {
         try {
-            // Backend-ийн тохиргоо name-ийг query parameter-ээр хүлээж авч байгаа
             await api.post(`/admin/categories?name=${newCategory}`);
             alert('Ангилал амжилттай нэмэгдлээ!');
             setNewCategory('');
         } catch (err) {
             alert('Ангилал нэмэхэд алдаа гарлаа');
+        }
+    };
+
+    const addPriority = async () => {
+        try {
+            await api.post(`/admin/priorities?name=${newPriority}`);
+            alert('Түвшин амжилттай нэмэгдлээ!');
+            setNewPriority('');
+        } catch (err) {
+            alert('Түвшин нэмэхэд алдаа гарлаа');
         }
     };
 
@@ -48,22 +58,42 @@ export default function AdminDashboard() {
                     </ul>
                 </div>
 
-                {/* Ангилал нэмэх */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4">Шинэ ангилал нэмэх</h2>
-                    <div className="flex gap-2">
-                        <input 
-                            className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                            placeholder="Жишээ: Ажил, Гэр"
-                            value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)}
-                        />
-                        <button 
-                            onClick={addCategory} 
-                            className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
-                        >
-                            Нэмэх
-                        </button>
+                <div className="space-y-8">
+                    {/* Ангилал нэмэх */}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h2 className="text-xl font-bold mb-4">Шинэ ангилал нэмэх</h2>
+                        <div className="flex gap-2">
+                            <input 
+                                className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                                placeholder="Жишээ: Ажил"
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                            />
+                            <button 
+                                onClick={addCategory} 
+                                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
+                            >
+                                Нэмэх
+                            </button>
+                        </div>
+                    </div>
+                    {/* Түвшин нэмэх */}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h2 className="text-xl font-bold mb-4">Шинэ түвшин нэмэх</h2>
+                        <div className="flex gap-2">
+                            <input 
+                                className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                                placeholder="Жишээ: High"
+                                value={newPriority}
+                                onChange={(e) => setNewPriority(e.target.value)}
+                            />
+                            <button 
+                                onClick={addPriority} 
+                                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
+                            >
+                                Нэмэх
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

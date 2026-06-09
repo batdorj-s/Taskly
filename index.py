@@ -148,6 +148,13 @@ def create_category(name: str, db: Session = Depends(get_db)):
     db.commit()
     return {"msg": "Ангилал нэмэгдлээ"}
 
+@app.post("/admin/priorities")
+def create_priority(name: str, db: Session = Depends(get_db)):
+    new_prio = models.Priority(name=name)
+    db.add(new_prio)
+    db.commit()
+    return {"msg": "Түвшин нэмэгдлээ"}
+
 @app.get("/categories")
 def get_categories(db: Session = Depends(get_db)):
     return db.query(models.Category).all()

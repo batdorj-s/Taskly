@@ -46,6 +46,11 @@ class Level(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
 
+class Priority(Base):
+    __tablename__ = "priorities"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
+
 
 # --- PYDANTIC SCHEMAS (API-аар дамжих өгөгдлийн дүрэм) ---
 
