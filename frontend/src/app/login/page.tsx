@@ -101,7 +101,7 @@ export default function LoginPage() {
                                     { key: 'hasSpecialChar', label: 'Хамгийн багадаа 1 тусгай тэмдэгт (!@#$%^&*)' },
                                 ].map((item) => (
                                     <li key={item.key} className={`flex items-center gap-2 font-medium ${validation[item.key as keyof typeof validation] ? 'text-green-600' : 'text-gray-500'}`}>
-                                        {validation[item.key as keyof typeof validation] ? '✅' : '❌'} {item.label}
+                                        {validation[item.key as keyof typeof validation] ? '• ' : '◦ '} {item.label}
                                     </li>
                                 ))}
                             </ul>
