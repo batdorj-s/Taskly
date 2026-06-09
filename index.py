@@ -247,7 +247,7 @@ def create_task(task: models.TaskCreate, db: Session = Depends(get_db), current_
 
 # Өөрийн бүх ажлуудыг харах (Pagination ашигласан)
 @app.get("/tasks")
-@app.get("/tasks/")
+@app.get("/tasks/", response_model=List[models.TaskResponse])
 def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     # Зөвхөн тухайн хэрэглэгчийн ажлуудыг 'skip' болон 'limit' ашиглан шүүж авна
     try:
@@ -256,6 +256,8 @@ def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), cu
     except Exception as e:
         print(f"Aldaa: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
 
 # Тухайлсан нэг ажлын мэдээллийг ID-аар харах
 @app.get("/tasks/{task_id}", response_model=models.TaskResponse)
