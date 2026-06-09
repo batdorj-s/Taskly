@@ -45,8 +45,11 @@ export default function TodoPage() {
             router.push('/login');
             return;
         }
-        fetchTodos();
         fetchMetadata();
+    }, []);
+
+    useEffect(() => {
+        fetchTodos();
     }, [page]);
 
     const fetchMetadata = async () => {
