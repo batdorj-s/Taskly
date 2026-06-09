@@ -183,13 +183,13 @@ def delete_category(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"msg": "Ангилал устгагдлаа"}
 
-@app.delete("/admin/priorities/{id}")
-def delete_priority(id: int, db: Session = Depends(get_db)):
-    db_prio = db.query(models.Priority).filter(models.Priority.id == id).first()
-    if not db_prio: raise HTTPException(status_code=404, detail="Олдсонгүй")
-    db.delete(db_prio)
+@app.delete("/admin/statuses/{id}")
+def delete_status(id: int, db: Session = Depends(get_db)):
+    db_stat = db.query(models.Status).filter(models.Status.id == id).first()
+    if not db_stat: raise HTTPException(status_code=404, detail="Олдсонгүй")
+    db.delete(db_stat)
     db.commit()
-    return {"msg": "Түвшин устгагдлаа"}
+    return {"msg": "Төлөв устгагдлаа"}
 
 @app.delete("/admin/users/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
