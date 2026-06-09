@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Trash2, Plus, Edit2, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Trash2, Plus, Edit2, Save, LogOut } from 'lucide-react';
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
@@ -14,6 +15,7 @@ export default function AdminDashboard() {
     const [newStatus, setNewStatus] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editName, setEditName] = useState('');
+    const router = useRouter();
 
     useEffect(() => { fetchData(); }, []);
 
@@ -30,6 +32,11 @@ export default function AdminDashboard() {
             setPriorities(prioRes.data);
             setStatuses(statRes.data);
         } catch (err) { console.error('Өгөгдөл татаж чадсангүй', err); }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        router.push('/admin/login');
     };
 
     const addEntry = async (url: string, name: string, setter: any, fetchData: any) => {
@@ -64,7 +71,16 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen bg-gray-50 p-8 text-gray-900">
-            <h1 className="text-4xl font-black mb-10 text-gray-900 tracking-tight">Админ Дашбоард</h1>
+            <div className="flex justify-between items-center mb-10">
+                <h1 className="text-4xl font-black text-gray-900 tracking-tight">Админ Дашбоард</h1>
+                <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-700 transition"
+                >
+                    <LogOut size={18} />
+                    Гарах
+                </button>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Хэрэглэгчид */}
