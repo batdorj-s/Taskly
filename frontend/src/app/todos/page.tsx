@@ -24,6 +24,8 @@ export default function TodoPage() {
     const [priority, setPriority] = useState('');
     const [deadline, setDeadline] = useState('');
     
+    const [status, setStatus] = useState('Pending');
+    
     // Модал нээлттэй эсэхийг хянах
     const [isModalOpen, setIsModalOpen] = useState(false);
     // Засварлаж байгаа ажил (null бол шинээр нэмж байна гэсэн үг)
@@ -47,6 +49,7 @@ export default function TodoPage() {
         setCategory('');
         setPriority('');
         setDeadline('');
+        setStatus('Pending');
         setEditingTodo(null);
     };
 
@@ -59,6 +62,7 @@ export default function TodoPage() {
             setCategory(todo.category);
             setPriority(todo.priority);
             setDeadline(todo.deadline ? todo.deadline.substring(0, 16) : '');
+            setStatus(todo.status);
         } else {
             resetForm();
         }
@@ -84,7 +88,7 @@ export default function TodoPage() {
                 category,
                 priority,
                 deadline: deadline || new Date().toISOString(),
-                status: editingTodo ? editingTodo.status : 'Pending'
+                status
             };
 
             if (editingTodo) {
@@ -270,14 +274,15 @@ export default function TodoPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Чухал түвшин</label>
-                                    <input
-                                        type="text"
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Төлөв</label>
+                                    <select
                                         className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                        placeholder="High, Low..."
-                                        value={priority}
-                                        onChange={(e) => setPriority(e.target.value)}
-                                    />
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
                                 </div>
                             </div>
 
