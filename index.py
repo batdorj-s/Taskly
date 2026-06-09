@@ -159,6 +159,10 @@ def create_priority(name: str, db: Session = Depends(get_db)):
 def get_categories(db: Session = Depends(get_db)):
     return db.query(models.Category).all()
 
+@app.get("/priorities")
+def get_priorities(db: Session = Depends(get_db)):
+    return db.query(models.Priority).all()
+
 # --- TASK ENDPOINTS (Ажлын CRUD үйлдлүүд) ---
 
 # Шинэ ажил үүсгэх
