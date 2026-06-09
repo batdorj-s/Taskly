@@ -1,5 +1,7 @@
 # main.py - API-ийн үндсэн логик, Auth болон Endpoints
 
+import os
+import re
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -12,6 +14,9 @@ from passlib.context import CryptContext
 import models
 import database
 from database import engine, get_db
+
+# Өгөгдлийн сангийн хүснэгтүүдийг анх удаа асаахад автоматаар үүсгэнэ
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Todo API for Interview")
 
@@ -26,11 +31,22 @@ app.add_middleware(
 
 # --- AUTHENTICATION SETUP (Нууцлалын тохиргоо) ---
 
+# Нууц үг шалгах функц
+def validate_password(password: str):
+    if len(password) < 8:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нууц үг 8-аас дээш тэмдэгттэй байх ёстой.")
+    if not re.search(r"[A-Z]", password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нууц үгэнд ядаж 1 ТОМ үсэг орох ёстой.")
+    if not re.search(r"[a-z]", password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нууц үгэнд ядаж 1 жижиг үсэг орох ёстой.")
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нууц үгэнд ядаж 1 тусгай тэмдэгт орох ёстой.")
+
 # Нууц үгийг hash-лах (bcrypt) тохиргоо
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# JWT Token үүсгэхэд ашиглах нууц түлхүүр (маш нууц байх ёстой)
-SECRET_KEY = "SUPER_SECRET_KEY_FOR_INTERVIEW"
+# JWT Token үүсгэхэд ашиглах нууц түлхүүр
+SECRET_KEY = os.getenv("SECRET_KEY", "SUPER_SECRET_KEY_FOR_INTERVIEW")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 # Token 60 минутын дараа хүчингүй болно
 
@@ -81,6 +97,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 # Шинэ хэрэглэгч бүртгэх
 @app.post("/register", response_model=models.UserResponse)
 def register(user: models.UserCreate, db: Session = Depends(get_db)):
+    validate_password(user.password)
     # Email бүртгэлтэй эсэхийг шалгана
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
@@ -105,6 +122,31 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
+# --- ADMIN ENDPOINTS ---
+
+@app.post("/admin/login")
+def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
+    if form_data.username == "superadmin" and form_data.password == "Admin@123!":
+        access_token = create_access_token(data={"sub": "admin_user", "role": "admin"})
+        return {"access_token": access_token, "token_type": "bearer"}
+    else:
+        raise HTTPException(status_code=400, detail="Админы нэр эсвэл нууц үг буруу байна")
+
+@app.get("/admin/users")
+def get_all_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return [{"id": u.id, "email": u.email} for u in users]
+
+@app.post("/admin/categories")
+def create_category(name: str, db: Session = Depends(get_db)):
+    new_cat = models.Category(name=name)
+    db.add(new_cat)
+    db.commit()
+    return {"msg": "Ангилал нэмэгдлээ"}
+
+@app.get("/categories")
+def get_categories(db: Session = Depends(get_db)):
+    return db.query(models.Category).all()
 
 # --- TASK ENDPOINTS (Ажлын CRUD үйлдлүүд) ---
 

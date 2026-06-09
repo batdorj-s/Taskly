@@ -36,6 +36,16 @@ class Task(Base):
     # Ажил болон түүнийг эзэмшигч хэрэглэгчийн холбоо
     owner = relationship("User", back_populates="tasks")
 
+class Category(Base):
+    __tablename__ = "categories"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
+
+class Level(Base):
+    __tablename__ = "levels"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
+
 
 # --- PYDANTIC SCHEMAS (API-аар дамжих өгөгдлийн дүрэм) ---
 
