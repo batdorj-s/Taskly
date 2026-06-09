@@ -12,6 +12,8 @@ export default function AdminDashboard() {
     const [newCategory, setNewCategory] = useState('');
     const [newPriority, setNewPriority] = useState('');
     const [newStatus, setNewStatus] = useState('');
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editName, setEditName] = useState('');
 
     useEffect(() => { fetchData(); }, []);
 
@@ -46,6 +48,20 @@ export default function AdminDashboard() {
         } catch (err) { alert('Устгахад алдаа гарлаа'); }
     };
 
+    const saveEdit = async (url: string) => {
+        try {
+            await api.put(`${url}/${editingId}?name=${editName}`);
+            setEditingId(null);
+            setEditName('');
+            fetchData();
+        } catch (err) { alert('Засахад алдаа гарлаа'); }
+    };
+
+    const startEdit = (id: number, name: string) => {
+        setEditingId(id);
+        setEditName(name);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 p-8 text-gray-900">
             <h1 className="text-4xl font-black mb-10 text-gray-900 tracking-tight">Админ Дашбоард</h1>
@@ -72,17 +88,24 @@ export default function AdminDashboard() {
                 {/* Тохиргооны хэсэг */}
                 <div className="space-y-8">
                     {[
-                        { title: 'Ангилал', list: categories, setter: setNewCategory, val: newCategory, add: () => addEntry('/admin/categories', newCategory, setNewCategory, fetchData), del: (id: number) => deleteEntry('/admin/categories', id) },
-                        { title: 'Түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id) },
-                        { title: 'Төлөв', list: statuses, setter: setNewStatus, val: newStatus, add: () => addEntry('/admin/statuses', newStatus, setNewStatus, fetchData), del: (id: number) => deleteEntry('/admin/statuses', id) },
+                        { title: 'Ангилал', list: categories, setter: setNewCategory, val: newCategory, add: () => addEntry('/admin/categories', newCategory, setNewCategory, fetchData), del: (id: number) => deleteEntry('/admin/categories', id), editUrl: '/admin/categories' },
+                        { title: 'Чухал түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id), editUrl: '/admin/priorities' },
+                        { title: 'Төлөв', list: statuses, setter: setNewStatus, val: newStatus, add: () => addEntry('/admin/statuses', newStatus, setNewStatus, fetchData), del: (id: number) => deleteEntry('/admin/statuses', id), editUrl: '/admin/statuses' },
                     ].map((item, idx) => (
                         <div key={idx} className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
                             <h2 className="text-xl font-bold mb-4">{item.title}</h2>
                             <ul className="mb-4 space-y-2">
-                                {item.list.map((i) => (
+                                {item.list.map((i: any) => (
                                     <li key={i.id} className="flex justify-between items-center text-sm font-medium text-gray-600 bg-gray-50 p-3 rounded-lg">
-                                        {i.name}
-                                        <button onClick={() => item.del(i.id)} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                        {editingId === i.id ? (
+                                            <input className="border p-1 rounded" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                                        ) : (
+                                            i.name
+                                        )}
+                                        <div className="flex gap-2">
+                                            <button onClick={() => editingId === i.id ? saveEdit(item.editUrl) : startEdit(i.id, i.name)} className="text-blue-500 hover:text-blue-700 font-bold">{editingId === i.id ? 'Save' : 'Edit'}</button>
+                                            <button onClick={() => item.del(i.id)} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>

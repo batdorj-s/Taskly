@@ -175,21 +175,30 @@ def get_priorities(db: Session = Depends(get_db)):
 def get_statuses(db: Session = Depends(get_db)):
     return db.query(models.Status).all()
 
-@app.delete("/admin/categories/{id}")
-def delete_category(id: int, db: Session = Depends(get_db)):
+@app.put("/admin/categories/{id}")
+def update_category(id: int, name: str, db: Session = Depends(get_db)):
     db_cat = db.query(models.Category).filter(models.Category.id == id).first()
     if not db_cat: raise HTTPException(status_code=404, detail="Олдсонгүй")
-    db.delete(db_cat)
+    db_cat.name = name
     db.commit()
-    return {"msg": "Ангилал устгагдлаа"}
+    return {"msg": "Ангилал шинэчлэгдлээ"}
 
-@app.delete("/admin/statuses/{id}")
-def delete_status(id: int, db: Session = Depends(get_db)):
+@app.put("/admin/priorities/{id}")
+def update_priority(id: int, name: str, db: Session = Depends(get_db)):
+    db_prio = db.query(models.Priority).filter(models.Priority.id == id).first()
+    if not db_prio: raise HTTPException(status_code=404, detail="Олдсонгүй")
+    db_prio.name = name
+    db.commit()
+    return {"msg": "Түвшин шинэчлэгдлээ"}
+
+@app.put("/admin/statuses/{id}")
+def update_status(id: int, name: str, db: Session = Depends(get_db)):
     db_stat = db.query(models.Status).filter(models.Status.id == id).first()
     if not db_stat: raise HTTPException(status_code=404, detail="Олдсонгүй")
-    db.delete(db_stat)
+    db_stat.name = name
     db.commit()
-    return {"msg": "Төлөв устгагдлаа"}
+    return {"msg": "Төлөв шинэчлэгдлээ"}
+
 
 @app.delete("/admin/users/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
