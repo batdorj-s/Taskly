@@ -55,6 +55,17 @@ export default function AdminDashboard() {
         }
     };
 
+    const addStatus = async () => {
+        try {
+            await api.post(`/admin/statuses?name=${newStatus}`);
+            alert('Төлөв амжилттай нэмэгдлээ!');
+            setNewStatus('');
+            fetchData();
+        } catch (err) {
+            alert('Төлөв нэмэхэд алдаа гарлаа');
+        }
+    };
+
     const deleteCategory = async (id: number) => {
         try {
             await api.delete(`/admin/categories/${id}`);
