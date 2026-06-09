@@ -139,7 +139,7 @@ def admin_login(creds: AdminLogin):
 @app.get("/admin/users")
 def get_all_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
-    return [{"id": u.id, "email": u.email} for u in users]
+    return [{"id": u.id, "email": u.email, "created_at": u.created_at} for u in users]
 
 @app.post("/admin/categories")
 def create_category(name: str, db: Session = Depends(get_db)):
