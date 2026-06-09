@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Edit2, Save } from 'lucide-react';
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
@@ -103,8 +103,14 @@ export default function AdminDashboard() {
                                             i.name
                                         )}
                                         <div className="flex gap-2">
-                                            <button onClick={() => editingId === i.id ? saveEdit(item.editUrl) : startEdit(i.id, i.name)} className="text-blue-500 hover:text-blue-700 font-bold">{editingId === i.id ? 'Save' : 'Edit'}</button>
-                                            <button onClick={() => item.del(i.id)} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                            <button 
+                                                onClick={() => editingId === i.id ? saveEdit(item.editUrl) : startEdit(i.id, i.name)} 
+                                                className="text-blue-500 hover:text-blue-700 p-1"
+                                                title={editingId === i.id ? "Хадгалах" : "Засах"}
+                                            >
+                                                {editingId === i.id ? <Save size={16} /> : <Edit2 size={16} />}
+                                            </button>
+                                            <button onClick={() => item.del(i.id)} className="text-red-400 hover:text-red-600 p-1"><Trash2 size={16} /></button>
                                         </div>
                                     </li>
                                 ))}
