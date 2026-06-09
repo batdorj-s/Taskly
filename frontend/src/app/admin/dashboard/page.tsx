@@ -83,46 +83,19 @@ export default function AdminDashboard() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    const saveUserEdit = async (id: number) => {
-        try {
-            await api.put(`/admin/users/${id}?email=${editName}`);
-            setEditingId(null);
-            setEditName('');
-            fetchData();
-        } catch (err) { alert('Засахад алдаа гарлаа'); }
-    };
-
-    return (
-        <div className="min-h-screen bg-gray-50 p-8 text-gray-900">
-            <h1 className="text-4xl font-black mb-10 text-gray-900 tracking-tight">Админ Дашбоард</h1>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Хэрэглэгчид */}
                 <div className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
                     <h2 className="text-2xl font-black mb-6">Бүртгэлтэй хэрэглэгчид</h2>
                     <ul className="space-y-3">
                         {users.map((u: any) => (
                             <li key={u.id} className="p-4 bg-gray-50 rounded-xl font-bold flex justify-between items-center">
-                                {editingId === u.id ? (
-                                    <input className="border p-1 rounded" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                                ) : (
-                                    <div>
-                                        <span className="block">{u.email}</span>
-                                        <span className="text-xs text-gray-500 font-normal">
-                                            Бүртгүүлсэн: {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Тодорхойгүй'}
-                                        </span>
-                                    </div>
-                                )}
-                                <div className="flex gap-2">
-                                    <button 
-                                        onClick={() => editingId === u.id ? saveUserEdit(u.id) : startEdit(u.id, u.email)} 
-                                        className="text-blue-500 hover:text-blue-700 p-1"
-                                        title={editingId === u.id ? "Хадгалах" : "Засах"}
-                                    >
-                                        {editingId === u.id ? <Save size={18} /> : <Edit2 size={18} />}
-                                    </button>
-                                    <button onClick={() => deleteEntry('/admin/users', u.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
+                                <div>
+                                    <span className="block">{u.email}</span>
+                                    <span className="text-xs text-gray-500 font-normal">
+                                        Бүртгүүлсэн: {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Тодорхойгүй'}
+                                    </span>
                                 </div>
+                                <button onClick={() => deleteEntry('/admin/users', u.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
                             </li>
                         ))}
                     </ul>

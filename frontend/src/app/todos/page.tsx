@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { Trash2, Plus, LogOut, CheckCircle, Circle } from 'lucide-react';
+import { Trash2, Plus, LogOut, CheckCircle, Circle, Edit2 } from 'lucide-react';
 
 interface Todo {
     id: number;
@@ -223,19 +223,17 @@ export default function TodoPage() {
                                 <div className="flex gap-2 w-full md:w-auto justify-end border-t md:border-t-0 pt-4 md:pt-0 border-gray-50">
                                     <button 
                                         onClick={() => openModal(todo)}
-                                        className="flex-1 md:flex-none px-5 py-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm"
+                                        className="flex-1 md:flex-none px-3 py-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm"
                                         title="Засах"
                                     >
-                                        <Plus size={18} className="rotate-45" />
-                                        <span>Засах</span>
+                                        <Edit2 size={18} />
                                     </button>
                                     <button 
                                         onClick={() => deleteTodo(todo.id)}
-                                        className="flex-1 md:flex-none px-5 py-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm"
+                                        className="flex-1 md:flex-none px-3 py-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm"
                                         title="Устгах"
                                     >
                                         <Trash2 size={18} />
-                                        <span>Устгах</span>
                                     </button>
                                 </div>
                             </div>
