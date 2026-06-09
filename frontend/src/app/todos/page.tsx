@@ -243,6 +243,24 @@ export default function TodoPage() {
                         ))
                     )}
                 </div>
+
+                {/* Pagination */}
+                <div className="flex justify-center items-center gap-4 mt-8">
+                    <button 
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                        className="bg-indigo-100 text-indigo-700 px-6 py-2 rounded-xl font-bold disabled:opacity-50 hover:bg-indigo-200 transition"
+                    >
+                        Өмнөх
+                    </button>
+                    <span className="font-black text-gray-700">Хуудас {page}</span>
+                    <button 
+                        onClick={() => setPage(page + 1)}
+                        className="bg-indigo-100 text-indigo-700 px-6 py-2 rounded-xl font-bold hover:bg-indigo-200 transition"
+                    >
+                        Дараах
+                    </button>
+                </div>
             </main>
 
             {/* 3. MODAL (Нэмэх болон Засах форм) */}
