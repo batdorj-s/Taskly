@@ -5,6 +5,8 @@ import api from '@/lib/api';
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
+    const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
+    const [priorities, setPriorities] = useState<{id: number, name: string}[]>([]);
     const [newCategory, setNewCategory] = useState('');
     const [newPriority, setNewPriority] = useState('');
 
@@ -14,10 +16,16 @@ export default function AdminDashboard() {
 
     const fetchData = async () => {
         try {
-            const usersRes = await api.get('/admin/users');
+            const [usersRes, catRes, prioRes] = await Promise.all([
+                api.get('/admin/users'),
+                api.get('/categories'),
+                api.get('/priorities')
+            ]);
             setUsers(usersRes.data);
+            setCategories(catRes.data);
+            setPriorities(prioRes.data);
         } catch (err) {
-            console.error('Хэрэглэгчдийг татаж чадсангүй', err);
+            console.error('Өгөгдөл татаж чадсангүй', err);
         }
     };
 
@@ -59,40 +67,36 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-8">
-                    {/* Ангилал нэмэх */}
+                    {/* Ангилал нэмэх & Жагсаалт */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4">Шинэ ангилал нэмэх</h2>
+                        <h2 className="text-xl font-bold mb-4">Ангилал (Categories)</h2>
+                        <ul className="mb-4 space-y-1">
+                            {categories.map((c) => <li key={c.id} className="text-sm text-gray-600">• {c.name}</li>)}
+                        </ul>
                         <div className="flex gap-2">
                             <input 
                                 className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Жишээ: Ажил"
+                                placeholder="Шинэ ангилал"
                                 value={newCategory}
                                 onChange={(e) => setNewCategory(e.target.value)}
                             />
-                            <button 
-                                onClick={addCategory} 
-                                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
-                            >
-                                Нэмэх
-                            </button>
+                            <button onClick={addCategory} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
                         </div>
                     </div>
-                    {/* Түвшин нэмэх */}
+                    {/* Түвшин нэмэх & Жагсаалт */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4">Шинэ түвшин нэмэх</h2>
+                        <h2 className="text-xl font-bold mb-4">Чухал түвшин (Priorities)</h2>
+                        <ul className="mb-4 space-y-1">
+                            {priorities.map((p) => <li key={p.id} className="text-sm text-gray-600">• {p.name}</li>)}
+                        </ul>
                         <div className="flex gap-2">
                             <input 
                                 className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Жишээ: High"
+                                placeholder="Шинэ түвшин"
                                 value={newPriority}
                                 onChange={(e) => setNewPriority(e.target.value)}
                             />
-                            <button 
-                                onClick={addPriority} 
-                                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
-                            >
-                                Нэмэх
-                            </button>
+                            <button onClick={addPriority} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
                         </div>
                     </div>
                 </div>
