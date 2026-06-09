@@ -294,7 +294,7 @@ export default function TodoPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Чухал түвшин</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Түвшин</label>
                                     <select
                                         className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
                                         value={priority}

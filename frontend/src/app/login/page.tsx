@@ -96,9 +96,9 @@ export default function LoginPage() {
                             <ul className="space-y-1 text-sm pt-2">
                                 {[
                                     { key: 'minLength', label: 'Хамгийн багадаа 8 тэмдэгт' },
-                                    { key: 'hasUpperCase', label: 'Ядаж 1 ТОМ үсэг (A-Z)' },
-                                    { key: 'hasLowerCase', label: 'Ядаж 1 жижиг үсэг (a-z)' },
-                                    { key: 'hasSpecialChar', label: 'Ядаж 1 тусгай тэмдэгт (!@#$%^&*)' },
+                                    { key: 'hasUpperCase', label: 'Хамгийн багадаа 1 ТОМ үсэг (A-Z)' },
+                                    { key: 'hasLowerCase', label: 'Хамгийн багадаа 1 үсэг (a-z)' },
+                                    { key: 'hasSpecialChar', label: 'Хамгийн багадаа 1 тусгай тэмдэгт (!@#$%^&*)' },
                                 ].map((item) => (
                                     <li key={item.key} className={`flex items-center gap-2 font-medium ${validation[item.key as keyof typeof validation] ? 'text-green-600' : 'text-gray-500'}`}>
                                         {validation[item.key as keyof typeof validation] ? '✅' : '❌'} {item.label}
