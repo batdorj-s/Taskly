@@ -13,13 +13,13 @@ from datetime import datetime
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True) # Дахин давтагдашгүй ID
+    id = Column(Integer, primary_key=True, index=True) # Дахин давтагдахгүй ID
     email = Column(String, unique=True, index=True)    # Хэрэглэгчийн мэйл (давхардахгүй)
     hashed_password = Column(String)                   # Нууцалсан нууц үг
-    created_at = Column(DateTime, default=datetime.utcnow) # Бүртгүүлсэн огноо
 
     # Хэрэглэгч болон тэдний ажлуудын хоорондын холбоо (Нэг хэрэглэгч олон ажилтай байж болно)
     tasks = relationship("Task", back_populates="owner")
+
 
 
 # Хийх ажлын мэдээллийг хадгалах 'tasks' хүснэгт
@@ -70,7 +70,6 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
-    created_at: datetime
     
     class Config:
         from_attributes = True # SQLAlchemy моделийг Pydantic руу хөрвүүлэх боломж олгоно
