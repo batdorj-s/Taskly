@@ -150,8 +150,8 @@ def create_category(name: str, db: Session = Depends(get_db)):
     return {"msg": "Ангилал нэмэгдлээ"}
 
 @app.post("/admin/priorities")
-def create_priority(name: str, db: Session = Depends(get_db)):
-    new_prio = models.Priority(name=name)
+def create_priority(name: str, weight: int = 0, db: Session = Depends(get_db)):
+    new_prio = models.Priority(name=name, weight=weight)
     db.add(new_prio)
     db.commit()
     return {"msg": "Түвшин нэмэгдлээ"}
@@ -169,7 +169,7 @@ def get_categories(db: Session = Depends(get_db)):
 
 @app.get("/priorities")
 def get_priorities(db: Session = Depends(get_db)):
-    return db.query(models.Priority).all()
+    return db.query(models.Priority).order_by(models.Priority.weight.desc()).all()
 
 @app.get("/statuses")
 def get_statuses(db: Session = Depends(get_db)):

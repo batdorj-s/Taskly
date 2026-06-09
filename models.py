@@ -53,6 +53,7 @@ class Priority(Base):
     __tablename__ = "priorities"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
+    weight = Column(Integer, default=0)
 
 class Status(Base):
     __tablename__ = "statuses"
