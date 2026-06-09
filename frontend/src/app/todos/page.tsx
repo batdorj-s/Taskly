@@ -211,6 +211,9 @@ export default function TodoPage() {
                                         <span className="text-xs font-black text-indigo-600 bg-gray-100 px-4 py-1.5 rounded-full uppercase tracking-wider">
                                             {todo.category || 'Хувийн'}
                                         </span>
+                                        <span className="text-xs font-black text-purple-600 bg-purple-50 px-4 py-1.5 rounded-full uppercase tracking-wider">
+                                            {todo.status || 'Pending'}
+                                        </span>
                                         {todo.deadline && (
                                             <div className="flex items-center gap-2 text-xs font-bold text-gray-400">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-gray-200"></div>
