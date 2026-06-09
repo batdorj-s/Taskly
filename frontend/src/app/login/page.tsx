@@ -4,11 +4,13 @@
 import { useState, useMemo } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const router = useRouter();
 
@@ -71,31 +73,38 @@ export default function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <div>
+                        <div className="relative">
                             <label className="block text-sm font-bold text-gray-800 mb-1">Нууц үг</label>
                             <input
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 required
                                 className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <button
+                                type="button"
+                                className="absolute right-3 top-9 text-gray-400 hover:text-indigo-600"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
                         </div>
 
                         {!isLogin && (
-                            <div className="space-y-1 text-sm">
+                            <ul className="space-y-1 text-sm pt-2">
                                 {[
                                     { key: 'minLength', label: 'Хамгийн багадаа 8 тэмдэгт' },
                                     { key: 'hasUpperCase', label: 'Ядаж 1 ТОМ үсэг (A-Z)' },
                                     { key: 'hasLowerCase', label: 'Ядаж 1 жижиг үсэг (a-z)' },
                                     { key: 'hasSpecialChar', label: 'Ядаж 1 тусгай тэмдэгт (!@#$%^&*)' },
                                 ].map((item) => (
-                                    <div key={item.key} className={`font-medium ${validation[item.key as keyof typeof validation] ? 'text-green-600' : 'text-gray-500'}`}>
-                                        {validation[item.key as keyof typeof validation] ? '• ' : '◦ '} {item.label}
-                                    </div>
+                                    <li key={item.key} className={`flex items-center gap-2 font-medium ${validation[item.key as keyof typeof validation] ? 'text-green-600' : 'text-gray-500'}`}>
+                                        {validation[item.key as keyof typeof validation] ? '✅' : '❌'} {item.label}
+                                    </li>
                                 ))}
-                            </div>
+                            </ul>
                         )}
                     </div>
 
