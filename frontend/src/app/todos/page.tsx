@@ -35,6 +35,7 @@ export default function TodoPage() {
 
     const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
     const [priorities, setPriorities] = useState<{id: number, name: string}[]>([]);
+    const [statuses, setStatuses] = useState<{id: number, name: string}[]>([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -52,6 +53,8 @@ export default function TodoPage() {
             setCategories(catRes.data);
             const prioRes = await api.get('/priorities');
             setPriorities(prioRes.data);
+            const statRes = await api.get('/statuses');
+            setStatuses(statRes.data);
         } catch (err) {
             console.error('Metadata татаж чадсангүй', err);
         }
@@ -308,8 +311,8 @@ export default function TodoPage() {
                                     value={status}
                                     onChange={(e) => setStatus(e.target.value)}
                                 >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Completed">Completed</option>
+                                    <option value="">Сонгох...</option>
+                                    {statuses.map((s) => <option key={s.id} value={s.name}>{s.name}</option>)}
                                 </select>
                             </div>
 
