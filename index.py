@@ -174,7 +174,29 @@ def get_priorities(db: Session = Depends(get_db)):
 def get_statuses(db: Session = Depends(get_db)):
     return db.query(models.Status).all()
 
-# --- TASK ENDPOINTS (Ажлын CRUD үйлдлүүд) ---
+@app.delete("/admin/categories/{id}")
+def delete_category(id: int, db: Session = Depends(get_db)):
+    db_cat = db.query(models.Category).filter(models.Category.id == id).first()
+    if not db_cat: raise HTTPException(status_code=404, detail="Олдсонгүй")
+    db.delete(db_cat)
+    db.commit()
+    return {"msg": "Ангилал устгагдлаа"}
+
+@app.delete("/admin/priorities/{id}")
+def delete_priority(id: int, db: Session = Depends(get_db)):
+    db_prio = db.query(models.Priority).filter(models.Priority.id == id).first()
+    if not db_prio: raise HTTPException(status_code=404, detail="Олдсонгүй")
+    db.delete(db_prio)
+    db.commit()
+    return {"msg": "Түвшин устгагдлаа"}
+
+@app.delete("/admin/statuses/{id}")
+def delete_status(id: int, db: Session = Depends(get_db)):
+    db_stat = db.query(models.Status).filter(models.Status.id == id).first()
+    if not db_stat: raise HTTPException(status_code=404, detail="Олдсонгүй")
+    db.delete(db_stat)
+    db.commit()
+    return {"msg": "Төлөв устгагдлаа"}
 
 # Шинэ ажил үүсгэх
 @app.post("/tasks/", response_model=models.TaskResponse)

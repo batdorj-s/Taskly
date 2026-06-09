@@ -55,14 +55,30 @@ export default function AdminDashboard() {
         }
     };
 
-    const addStatus = async () => {
+    const deleteCategory = async (id: number) => {
         try {
-            await api.post(`/admin/statuses?name=${newStatus}`);
-            alert('Төлөв амжилттай нэмэгдлээ!');
-            setNewStatus('');
+            await api.delete(`/admin/categories/${id}`);
             fetchData();
         } catch (err) {
-            alert('Төлөв нэмэхэд алдаа гарлаа');
+            alert('Устгахад алдаа гарлаа');
+        }
+    };
+
+    const deletePriority = async (id: number) => {
+        try {
+            await api.delete(`/admin/priorities/${id}`);
+            fetchData();
+        } catch (err) {
+            alert('Устгахад алдаа гарлаа');
+        }
+    };
+
+    const deleteStatus = async (id: number) => {
+        try {
+            await api.delete(`/admin/statuses/${id}`);
+            fetchData();
+        } catch (err) {
+            alert('Устгахад алдаа гарлаа');
         }
     };
 
@@ -76,7 +92,7 @@ export default function AdminDashboard() {
                     <h2 className="text-xl font-bold mb-4">Бүртгэлтэй хэрэглэгчид</h2>
                     <ul className="space-y-2">
                         {users.map((u: any) => (
-                            <li key={u.id} className="p-3 bg-gray-50 rounded-lg font-medium border border-gray-100">
+                            <li key={u.id} className="p-3 bg-gray-50 rounded-lg font-medium border border-gray-100 flex justify-between">
                                 {u.email}
                             </li>
                         ))}
@@ -84,11 +100,16 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-8">
-                    {/* Ангилал нэмэх */}
+                    {/* Ангилал */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <h2 className="text-xl font-bold mb-4">Ангилал (Categories)</h2>
                         <ul className="mb-4 space-y-1">
-                            {categories.map((c) => <li key={c.id} className="text-sm text-gray-600">• {c.name}</li>)}
+                            {categories.map((c) => (
+                                <li key={c.id} className="flex justify-between items-center text-sm text-gray-600">
+                                    • {c.name}
+                                    <button onClick={() => deleteCategory(c.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
+                                </li>
+                            ))}
                         </ul>
                         <div className="flex gap-2">
                             <input 
@@ -100,11 +121,16 @@ export default function AdminDashboard() {
                             <button onClick={addCategory} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
                         </div>
                     </div>
-                    {/* Түвшин нэмэх */}
+                    {/* Түвшин */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <h2 className="text-xl font-bold mb-4">Чухал түвшин (Priorities)</h2>
                         <ul className="mb-4 space-y-1">
-                            {priorities.map((p) => <li key={p.id} className="text-sm text-gray-600">• {p.name}</li>)}
+                            {priorities.map((p) => (
+                                <li key={p.id} className="flex justify-between items-center text-sm text-gray-600">
+                                    • {p.name}
+                                    <button onClick={() => deletePriority(p.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
+                                </li>
+                            ))}
                         </ul>
                         <div className="flex gap-2">
                             <input 
@@ -116,11 +142,16 @@ export default function AdminDashboard() {
                             <button onClick={addPriority} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
                         </div>
                     </div>
-                    {/* Төлөв нэмэх */}
+                    {/* Төлөв */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <h2 className="text-xl font-bold mb-4">Төлөв (Statuses)</h2>
                         <ul className="mb-4 space-y-1">
-                            {statuses.map((s) => <li key={s.id} className="text-sm text-gray-600">• {s.name}</li>)}
+                            {statuses.map((s) => (
+                                <li key={s.id} className="flex justify-between items-center text-sm text-gray-600">
+                                    • {s.name}
+                                    <button onClick={() => deleteStatus(s.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
+                                </li>
+                            ))}
                         </ul>
                         <div className="flex gap-2">
                             <input 
