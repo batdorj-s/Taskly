@@ -155,6 +155,13 @@ def create_priority(name: str, db: Session = Depends(get_db)):
     db.commit()
     return {"msg": "Түвшин нэмэгдлээ"}
 
+@app.post("/admin/statuses")
+def create_status(name: str, db: Session = Depends(get_db)):
+    new_stat = models.Status(name=name)
+    db.add(new_stat)
+    db.commit()
+    return {"msg": "Төлөв нэмэгдлээ"}
+
 @app.get("/categories")
 def get_categories(db: Session = Depends(get_db)):
     return db.query(models.Category).all()
@@ -162,6 +169,10 @@ def get_categories(db: Session = Depends(get_db)):
 @app.get("/priorities")
 def get_priorities(db: Session = Depends(get_db)):
     return db.query(models.Priority).all()
+
+@app.get("/statuses")
+def get_statuses(db: Session = Depends(get_db)):
+    return db.query(models.Status).all()
 
 # --- TASK ENDPOINTS (Ажлын CRUD үйлдлүүд) ---
 
