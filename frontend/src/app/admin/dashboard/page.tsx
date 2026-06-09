@@ -73,7 +73,7 @@ export default function AdminDashboard() {
                 <div className="space-y-8">
                     {[
                         { title: 'Ангилал', list: categories, setter: setNewCategory, val: newCategory, add: () => addEntry('/admin/categories', newCategory, setNewCategory, fetchData), del: (id: number) => deleteEntry('/admin/categories', id) },
-                        { title: 'Чухал түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id) },
+                        { title: 'Түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id) },
                         { title: 'Төлөв', list: statuses, setter: setNewStatus, val: newStatus, add: () => addEntry('/admin/statuses', newStatus, setNewStatus, fetchData), del: (id: number) => deleteEntry('/admin/statuses', id) },
                     ].map((item, idx) => (
                         <div key={idx} className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
