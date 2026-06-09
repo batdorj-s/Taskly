@@ -33,6 +33,9 @@ export default function TodoPage() {
 
     const router = useRouter();
 
+    const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
+    const [priorities, setPriorities] = useState<{id: number, name: string}[]>([]);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -40,7 +43,19 @@ export default function TodoPage() {
             return;
         }
         fetchTodos();
+        fetchMetadata();
     }, []);
+
+    const fetchMetadata = async () => {
+        try {
+            const catRes = await api.get('/categories');
+            setCategories(catRes.data);
+            const prioRes = await api.get('/priorities');
+            setPriorities(prioRes.data);
+        } catch (err) {
+            console.error('Metadata татаж чадсангүй', err);
+        }
+    };
 
     // Формыг цэвэрлэх
     const resetForm = () => {
@@ -265,25 +280,37 @@ export default function TodoPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-1">Ангилал</label>
-                                    <input
-                                        type="text"
-                                        className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                        placeholder="Ажил, Гэр..."
-                                        value={category}
-                                        onChange={(e) => setCategory(e.target.value)}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Төлөв</label>
                                     <select
                                         className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                        value={status}
-                                        onChange={(e) => setStatus(e.target.value)}
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value)}
                                     >
-                                        <option value="Pending">Pending</option>
-                                        <option value="Completed">Completed</option>
+                                        <option value="">Сонгох...</option>
+                                        {categories.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
                                     </select>
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Чухал түвшин</label>
+                                    <select
+                                        className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                                        value={priority}
+                                        onChange={(e) => setPriority(e.target.value)}
+                                    >
+                                        <option value="">Сонгох...</option>
+                                        {priorities.map((p) => <option key={p.id} value={p.name}>{p.name}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Төлөв</label>
+                                <select
+                                    className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                                    value={status}
+                                    onChange={(e) => setStatus(e.target.value)}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
                             </div>
 
                             <div className="flex gap-3 pt-4">
