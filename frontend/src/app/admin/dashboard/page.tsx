@@ -8,10 +8,11 @@ import { Trash2, Plus, Edit2, Save, LogOut } from 'lucide-react';
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
     const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
-    const [priorities, setPriorities] = useState<{id: number, name: string}[]>([]);
+    const [priorities, setPriorities] = useState<{id: number, name: string, weight: number}[]>([]);
     const [statuses, setStatuses] = useState<{id: number, name: string}[]>([]);
     const [newCategory, setNewCategory] = useState('');
     const [newPriority, setNewPriority] = useState('');
+    const [newPriorityWeight, setNewPriorityWeight] = useState('');
     const [newStatus, setNewStatus] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editName, setEditName] = useState('');
@@ -39,10 +40,13 @@ export default function AdminDashboard() {
         router.push('/admin/login');
     };
 
-    const addEntry = async (url: string, name: string, setter: any, fetchData: any) => {
+    const addEntry = async (url: string, name: string, setter: any, fetchData: any, weight?: string) => {
         try {
-            await api.post(`${url}?name=${name}`);
+            let finalUrl = `${url}?name=${name}`;
+            if (weight) finalUrl += `&weight=${weight}`;
+            await api.post(finalUrl);
             setter('');
+            setNewPriorityWeight('');
             fetchData();
         } catch (err) { alert('Алдаа гарлаа'); }
     };
@@ -73,12 +77,8 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-gray-50 p-8 text-gray-900">
             <div className="flex justify-between items-center mb-10">
                 <h1 className="text-4xl font-black text-gray-900 tracking-tight">Админ Дашбоард</h1>
-                <button 
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-700 transition"
-                >
-                    <LogOut size={18} />
-                    Гарах
+                <button onClick={handleLogout} className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-700 transition">
+                    <LogOut size={18} /> Гарах
                 </button>
             </div>
             
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
                 <div className="space-y-8">
                     {[
                         { title: 'Ангилал', list: categories, setter: setNewCategory, val: newCategory, add: () => addEntry('/admin/categories', newCategory, setNewCategory, fetchData), del: (id: number) => deleteEntry('/admin/categories', id), editUrl: '/admin/categories' },
-                        { title: 'Түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id), editUrl: '/admin/priorities' },
+                        { title: 'Түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData, newPriorityWeight), del: (id: number) => deleteEntry('/admin/priorities', id), editUrl: '/admin/priorities' },
                         { title: 'Төлөв', list: statuses, setter: setNewStatus, val: newStatus, add: () => addEntry('/admin/statuses', newStatus, setNewStatus, fetchData), del: (id: number) => deleteEntry('/admin/statuses', id), editUrl: '/admin/statuses' },
                     ].map((item, idx) => (
                         <div key={idx} className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
@@ -113,11 +113,7 @@ export default function AdminDashboard() {
                             <ul className="mb-4 space-y-2">
                                 {item.list.map((i: any) => (
                                     <li key={i.id} className="flex justify-between items-center text-sm font-medium text-gray-600 bg-gray-50 p-3 rounded-lg">
-                                        {editingId === i.id ? (
-                                            <input className="border p-1 rounded" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                                        ) : (
-                                            i.name
-                                        )}
+                                        {editingId === i.id ? <input className="border p-1 rounded" value={editName} onChange={(e) => setEditName(e.target.value)} /> : i.name}
                                         <div className="flex gap-2">
                                             <button 
                                                 onClick={() => editingId === i.id ? saveEdit(item.editUrl) : startEdit(i.id, i.name)} 
@@ -133,7 +129,10 @@ export default function AdminDashboard() {
                             </ul>
                             <div className="flex gap-2">
                                 <input className="flex-1 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500" value={item.val} onChange={(e) => item.setter(e.target.value)} placeholder={`Шинэ ${item.title}`} />
-                                <button onClick={item.add} className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition"><Plus size={20} /></button>
+                                {item.title === 'Түвшин' && (
+                                    <input type="number" className="w-1/4 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Жин" value={newPriorityWeight} onChange={(e) => setNewPriorityWeight(e.target.value)} />
+                                )}
+                                <button onClick={item.add} className="bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-indigo-700 transition"><Plus size={20} /></button>
                             </div>
                         </div>
                     ))}
