@@ -200,6 +200,14 @@ def update_status(id: int, name: str, db: Session = Depends(get_db)):
     return {"msg": "Төлөв шинэчлэгдлээ"}
 
 
+@app.put("/admin/users/{id}")
+def update_user(id: int, email: str, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == id).first()
+    if not db_user: raise HTTPException(status_code=404, detail="Хэрэглэгч олдсонгүй")
+    db_user.email = email
+    db.commit()
+    return {"msg": "Хэрэглэгч шинэчлэгдлээ"}
+
 @app.delete("/admin/users/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.id == id).first()
