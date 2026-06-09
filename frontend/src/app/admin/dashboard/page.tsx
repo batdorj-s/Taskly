@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import { Trash2, Plus } from 'lucide-react';
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState([]);
@@ -12,9 +13,7 @@ export default function AdminDashboard() {
     const [newPriority, setNewPriority] = useState('');
     const [newStatus, setNewStatus] = useState('');
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    useEffect(() => { fetchData(); }, []);
 
     const fetchData = async () => {
         try {
@@ -28,166 +27,66 @@ export default function AdminDashboard() {
             setCategories(catRes.data);
             setPriorities(prioRes.data);
             setStatuses(statRes.data);
-        } catch (err) {
-            console.error('Өгөгдөл татаж чадсангүй', err);
-        }
+        } catch (err) { console.error('Өгөгдөл татаж чадсангүй', err); }
     };
 
-    const addCategory = async () => {
+    const addEntry = async (url: string, name: string, setter: any, fetchData: any) => {
         try {
-            await api.post(`/admin/categories?name=${newCategory}`);
-            alert('Ангилал амжилттай нэмэгдлээ!');
-            setNewCategory('');
+            await api.post(`${url}?name=${name}`);
+            setter('');
             fetchData();
-        } catch (err) {
-            alert('Ангилал нэмэхэд алдаа гарлаа');
-        }
+        } catch (err) { alert('Алдаа гарлаа'); }
     };
 
-    const addPriority = async () => {
+    const deleteEntry = async (url: string, id: number) => {
+        if (!confirm('Устгах уу?')) return;
         try {
-            await api.post(`/admin/priorities?name=${newPriority}`);
-            alert('Түвшин амжилттай нэмэгдлээ!');
-            setNewPriority('');
+            await api.delete(`${url}/${id}`);
             fetchData();
-        } catch (err) {
-            alert('Түвшин нэмэхэд алдаа гарлаа');
-        }
-    };
-
-    const addStatus = async () => {
-        try {
-            await api.post(`/admin/statuses?name=${newStatus}`);
-            alert('Төлөв амжилттай нэмэгдлээ!');
-            setNewStatus('');
-            fetchData();
-        } catch (err) {
-            alert('Төлөв нэмэхэд алдаа гарлаа');
-        }
-    };
-
-    const deleteUser = async (id: number) => {
-        if (!confirm('Энэ хэрэглэгчийг устгахдаа итгэлтэй байна уу?')) return;
-        try {
-            await api.delete(`/admin/users/${id}`);
-            fetchData();
-        } catch (err) {
-            alert('Устгахад алдаа гарлаа');
-        }
-    };
-
-    const deleteCategory = async (id: number) => {
-        try {
-            await api.delete(`/admin/categories/${id}`);
-            fetchData();
-        } catch (err) {
-            alert('Устгахад алдаа гарлаа');
-        }
-    };
-
-    const deletePriority = async (id: number) => {
-        try {
-            await api.delete(`/admin/priorities/${id}`);
-            fetchData();
-        } catch (err) {
-            alert('Устгахад алдаа гарлаа');
-        }
-    };
-
-    const deleteStatus = async (id: number) => {
-        try {
-            await api.delete(`/admin/statuses/${id}`);
-            fetchData();
-        } catch (err) {
-            alert('Устгахад алдаа гарлаа');
-        }
+        } catch (err) { alert('Устгахад алдаа гарлаа'); }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-10 text-gray-900">
-            <h1 className="text-3xl font-black mb-8 text-indigo-600">Админ Дашбоард</h1>
+        <div className="min-h-screen bg-gray-50 p-8 text-gray-900">
+            <h1 className="text-4xl font-black mb-10 text-gray-900 tracking-tight">Админ Дашбоард</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Хэрэглэгчдийн жагсаалт */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4">Бүртгэлтэй хэрэглэгчид</h2>
-                    <ul className="space-y-2">
+                {/* Хэрэглэгчид */}
+                <div className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
+                    <h2 className="text-2xl font-black mb-6">Бүртгэлтэй хэрэглэгчид</h2>
+                    <ul className="space-y-3">
                         {users.map((u: any) => (
-                            <li key={u.id} className="p-3 bg-gray-50 rounded-lg font-medium border border-gray-100 flex justify-between items-center">
-                                <div>
-                                    <span className="block font-bold text-indigo-700">{u.email}</span>
-                                    <span className="text-xs text-gray-500">Бүртгүүлсэн: {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Тодорхойгүй'}</span>
-                                </div>
-                                <button onClick={() => deleteUser(u.id)} className="text-red-500 hover:text-red-700 font-bold ml-4">Устгах</button>
+                            <li key={u.id} className="p-4 bg-gray-50 rounded-xl font-bold flex justify-between items-center">
+                                {u.email}
+                                <button onClick={() => deleteEntry('/admin/users', u.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
                             </li>
                         ))}
                     </ul>
                 </div>
 
+                {/* Тохиргооны хэсэг */}
                 <div className="space-y-8">
-                    {/* Ангилал */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4">Ангилал (Categories)</h2>
-                        <ul className="mb-4 space-y-1">
-                            {categories.map((c) => (
-                                <li key={c.id} className="flex justify-between items-center text-sm text-gray-600">
-                                    • {c.name}
-                                    <button onClick={() => deleteCategory(c.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="flex gap-2">
-                            <input 
-                                className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Шинэ ангилал"
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                            />
-                            <button onClick={addCategory} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
+                    {[
+                        { title: 'Ангилал', list: categories, setter: setNewCategory, val: newCategory, add: () => addEntry('/admin/categories', newCategory, setNewCategory, fetchData), del: (id: number) => deleteEntry('/admin/categories', id) },
+                        { title: 'Чухал түвшин', list: priorities, setter: setNewPriority, val: newPriority, add: () => addEntry('/admin/priorities', newPriority, setNewPriority, fetchData), del: (id: number) => deleteEntry('/admin/priorities', id) },
+                        { title: 'Төлөв', list: statuses, setter: setNewStatus, val: newStatus, add: () => addEntry('/admin/statuses', newStatus, setNewStatus, fetchData), del: (id: number) => deleteEntry('/admin/statuses', id) },
+                    ].map((item, idx) => (
+                        <div key={idx} className="bg-white p-8 rounded-[24px] shadow-sm border border-gray-100">
+                            <h2 className="text-xl font-bold mb-4">{item.title}</h2>
+                            <ul className="mb-4 space-y-2">
+                                {item.list.map((i) => (
+                                    <li key={i.id} className="flex justify-between items-center text-sm font-medium text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                        {i.name}
+                                        <button onClick={() => item.del(i.id)} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className="flex gap-2">
+                                <input className="flex-1 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500" value={item.val} onChange={(e) => item.setter(e.target.value)} placeholder={`Шинэ ${item.title}`} />
+                                <button onClick={item.add} className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition"><Plus size={20} /></button>
+                            </div>
                         </div>
-                    </div>
-                    {/* Түвшин */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4">Чухал түвшин (Priorities)</h2>
-                        <ul className="mb-4 space-y-1">
-                            {priorities.map((p) => (
-                                <li key={p.id} className="flex justify-between items-center text-sm text-gray-600">
-                                    • {p.name}
-                                    <button onClick={() => deletePriority(p.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="flex gap-2">
-                            <input 
-                                className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Шинэ түвшин"
-                                value={newPriority}
-                                onChange={(e) => setNewPriority(e.target.value)}
-                            />
-                            <button onClick={addPriority} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
-                        </div>
-                    </div>
-                    {/* Төлөв */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4">Төлөв (Statuses)</h2>
-                        <ul className="mb-4 space-y-1">
-                            {statuses.map((s) => (
-                                <li key={s.id} className="flex justify-between items-center text-sm text-gray-600">
-                                    • {s.name}
-                                    <button onClick={() => deleteStatus(s.id)} className="text-red-500 hover:text-red-700 font-bold">X</button>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="flex gap-2">
-                            <input 
-                                className="flex-1 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Шинэ төлөв"
-                                value={newStatus}
-                                onChange={(e) => setNewStatus(e.target.value)}
-                            />
-                            <button onClick={addStatus} className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Нэмэх</button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
