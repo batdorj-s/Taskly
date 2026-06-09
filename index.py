@@ -23,9 +23,9 @@ app = FastAPI(title="Todo API for Interview")
 # --- CORS SETTINGS (Frontend-ээс хандах зөвшөөрөл) ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://frontend-sand-five-49.vercel.app"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
