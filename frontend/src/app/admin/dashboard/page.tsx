@@ -57,7 +57,10 @@ export default function AdminDashboard() {
                     <ul className="space-y-3">
                         {users.map((u: any) => (
                             <li key={u.id} className="p-4 bg-gray-50 rounded-xl font-bold flex justify-between items-center">
-                                {u.email}
+                                <div>
+                                    <span className="block">{u.email}</span>
+                                    <span className="text-xs text-gray-500 font-normal">Бүртгүүлсэн: {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Тодорхойгүй'}</span>
+                                </div>
                                 <button onClick={() => deleteEntry('/admin/users', u.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
                             </li>
                         ))}
